@@ -1,0 +1,1 @@
+{"query": "mutation { projectCreate(input: { name: \"Tiktok_Facebook_Poster\" }) { id environments { edges { node { id name } } } } }"}

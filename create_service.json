@@ -1,0 +1,1 @@
+{"query": "mutation { serviceCreate(input: { projectId: \"1ec5d195-23bd-4af7-a784-c4fa7952521b\", name: \"Tiktok_Facebook_Worker\", source: { repo: \"cengo33/Antigravity\" }, branch: \"main\" }) { id name } }"}
