@@ -1,0 +1,14 @@
+[providers.python]
+python_version = "3.11"
+
+[phases.setup]
+nixPkgs = ["chromium"]
+
+[phases.build]
+cmds = [
+    "pip install -r requirements.txt",
+    "playwright install --with-deps chromium"
+]
+
+[start]
+cmd = "python main.py"
