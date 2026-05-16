@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Dashboard | Antigravity</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-mode">
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h1 class="logo">TT<span>DL</span></h1>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-view="download">
+                <i class="fas fa-download"></i>
+                <span>Downloader</span>
+            </button>
+            <button class="nav-item" data-view="explore">
+                <i class="fas fa-compass"></i>
+                <span>Explore</span>
+            </button>
+            <button class="nav-item" data-view="history">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">A</div>
+                <div class="info">
+                    <p class="name">Antigravity</p>
+                    <p class="status">Premium User</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <!-- DOWNLOAD VIEW -->
+        <section id="downloadView" class="view active">
+            <header class="view-header">
+                <h2>Video Downloader</h2>
+                <p>Paste a TikTok link to start downloading without watermarks.</p>
+            </header>
+
+            <div class="search-box">
+                <div class="input-wrapper">
+                    <input type="text" id="tiktokUrl" placeholder="https://www.tiktok.com/@user/video/..." autocomplete="off">
+                    <button id="fetchBtn" class="btn-primary">
+                        <span class="btn-text">Extract</span>
+                        <div class="loader-inner"></div>
+                    </button>
+                </div>
+                <div class="quick-actions">
+                    <button id="pasteBtn" class="btn-secondary"><i class="fas fa-paste"></i> Paste from Clipboard</button>
+                </div>
+            </div>
+
+            <div id="resultContainer" class="result-container hidden">
+                <div class="video-preview-card">
+                    <div class="preview-media">
+                        <img id="videoCover" src="" alt="Video Cover">
+                        <div class="overlay"></div>
+                    </div>
+                    <div class="preview-details">
+                        <h3 id="videoTitle">Amazing TikTok Video</h3>
+                        <p id="videoAuthor">@tiktokuser</p>
+                        <div class="stats">
+                            <span><i class="fas fa-play"></i> HD Available</span>
+                            <span><i class="fas fa-check-circle"></i> No Watermark</span>
+                        </div>
+                        <div class="preview-actions">
+                            <a id="downloadBtn" href="#" class="btn-dl-main">
+                                <i class="fas fa-cloud-download-alt"></i> Download MP4
+                            </a>
+                            <a id="musicBtn" href="#" class="btn-dl-sub" target="_blank">
+                                <i class="fas fa-music"></i> Audio
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="errorMsg" class="error-msg hidden"></div>
+        </section>
+
+        <!-- EXPLORE VIEW -->
+        <section id="exploreView" class="view">
+            <header class="view-header">
+                <h2>Explore Trending</h2>
+                <p>Swipe through trending videos and download them instantly.</p>
+            </header>
+            
+            <div class="tiktok-feed-container">
+                <div id="tiktokFeed" class="feed-grid">
+                    <!-- Feed items will be injected here -->
+                    <div class="feed-loader">Loading trending videos...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY VIEW -->
+        <section id="historyView" class="view">
+            <header class="view-header">
+                <h2>Download History</h2>
+                <p>Your recently downloaded videos.</p>
+            </header>
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <p>No downloads yet.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

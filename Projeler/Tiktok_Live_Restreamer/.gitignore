@@ -1,0 +1,4 @@
+tiktok_session/
+__pycache__/
+.env
+live_status.png

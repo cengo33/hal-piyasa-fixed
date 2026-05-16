@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Antigravity Restreamer Pro - OS Mode</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0b0f19">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(22, 27, 44, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #ec4899;
+            --accent: #10b981;
+            --error: #ef4444;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --input-bg: rgba(15, 23, 42, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Os Window Styles */
+        .os-window {
+            position: absolute;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            resize: both;
+            overflow: hidden;
+            min-width: 300px;
+            min-height: 200px;
+            transition: border-color 0.3s;
+        }
+        .os-window:focus-within, .os-window:hover { border-color: rgba(255,255,255,0.2); z-index: 100; }
+        
+        .os-window-header {
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.6);
+            border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: grab;
+            font-size: 0.85rem; font-weight: 700; color: var(--text-dim);
+            user-select: none;
+        }
+        .os-window-header:active { cursor: grabbing; }
+        
+        .os-window-content {
+            padding: 1rem;
+            flex: 1;
+            overflow-y: auto;
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        
+        /* Custom Scrollbar for windows */
+        .os-window-content::-webkit-scrollbar { width: 6px; }
+        .os-window-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .os-window-content::-webkit-resizer { background: transparent; }
+
+        /* UI Elements */
+        .brand h1 { font-size: 1.5rem; font-weight: 900; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand p { font-size: 0.75rem; color: var(--text-dim); }
+
+        .status-container { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 0.75rem; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text-dim); }
+        .status-streaming .dot { background: var(--accent); box-shadow: 0 0 16px var(--accent); animation: pulse 2s infinite; }
+        .status-checking .dot { background: var(--primary); animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.4rem; }
+        input, select { width: 100%; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 0.5rem; padding: 0.75rem; color: white; font-size: 0.9rem; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); }
+        input[type="range"] { padding: 0; height: 6px; }
+
+        button { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: none; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
+        .btn-outline { background: transparent; border: 1px solid var(--card-border); color: var(--text-main); }
+        
+        .stat-card { background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--card-border); }
+        .stat-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; }
+        .stat-value { font-size: 1.25rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+        .logs-container { background: rgba(0,0,0,0.4); border-radius: 0.75rem; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; flex: 1; overflow-y: auto; }
+        .log-info { color: #93c5fd; } .log-ffmpeg { color: #6ee7b7; } .log-error { color: #fca5a5; } .log-warn { color: #fcd34d; }
+
+        /* Resizer fix for Safari/Chrome */
+        ::-webkit-resizer { border: 2px solid transparent; background: rgba(255,255,255,0.2); box-shadow: inset 0 0 0 4px var(--card-bg); }
+    </style>
+</head>
+<body>
+
+    <!-- Pencere 1: Kontrol Paneli -->
+    <div class="os-window" id="win-controls" style="left: 20px; top: 20px; width: 340px; height: calc(100vh - 40px);">
+        <div class="os-window-header">
+            <span>🛠️ Kontrol Paneli</span>
+        </div>
+        <div class="os-window-content">
+            <div class="brand">
+                <h1>Antigravity Pro</h1>
+                <p>Live Restreamer v4.0 (OS Mode)</p>
+            </div>
+
+            <div id="status-box" class="status-container status-idle">
+                <div class="dot"></div>
+                <div style="display: flex; flex-direction: column; width: 100%;">
+                    <span id="status-text" style="font-weight: 700; font-size: 0.9rem;">Bekleniyor</span>
+                    <span id="status-subtext" style="font-size: 0.7rem; color: var(--text-dim);">Sistem Hazır</span>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--card-border); display: flex; align-items: center; gap: 0.4rem;">
+                        <div id="fb-dot" class="dot" style="width: 8px; height: 8px; background: var(--error);"></div>
+                        <span id="fb-text" style="font-size: 0.75rem; font-weight: 600; color: var(--error);">Facebook Kapalı</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group"><label>TikTok Kullanıcı Adı</label><input type="text" id="tiktok_user" placeholder="@username"></div>
+            <div class="form-group"><label>Facebook Stream Key</label><input type="text" id="fb_key" placeholder="FB-..."></div>
+            <div class="form-group"><label>RTMP URL</label><input type="text" id="rtmp_url"></div>
+            
+            <div class="form-group">
+                <label>Bitrate: <span id="bitrate_val">1500</span> kbps</label>
+                <input type="range" id="bitrate_range" min="500" max="6000" step="100" value="1500" oninput="document.getElementById('bitrate_val').innerText=this.value">
+            </div>
+            <div class="form-group">
+                <label>Çözünürlük & Format</label>
+                <select id="resolution">
+                    <option value="720x1280">720p Dikey (Önerilen)</option>
+                    <option value="1280x720">720p Yatay</option>
+                    <option value="original">Orijinal Boyut</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" onclick="saveSettings()">Ayarları Kaydet</button>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-primary" id="btn-start" onclick="startStream()" style="background: #059669;">▶ Başlat</button>
+                <button class="btn-primary" id="btn-stop" onclick="stopStream()" style="background: #dc2626; display: none;">■ Durdur</button>
+            </div>
+            <button class="btn-outline" onclick="resetWindows()">Pencereleri Sıfırla</button>
+        </div>
+    </div>
+
+    <!-- Pencere 2: TikTok Gezgini -->
+    <div class="os-window" id="win-tiktok" style="left: 380px; top: 20px; width: calc(50vw - 200px); height: calc(50vh - 30px);">
+        <div class="os-window-header">
+            <span>📱 TikTok Gezgini</span>
+            <button onclick="document.getElementById('tiktok-iframe').src='https://www.tiktok.com/live'" style="width: auto; padding: 0.2rem 0.5rem; font-size: 0.7rem; background: transparent; border: 1px solid var(--card-border); color: var(--text-dim); border-radius: 0.3rem;">Yenile</button>
+        </div>
+        <div class="os-window-content" style="padding: 0; overflow: hidden;">
+            <iframe id="tiktok-iframe" src="https://www.tiktok.com/live" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <!-- Pencere 3: Facebook Gezgini -->
+    <div class="os-window" id="win-facebook" style="left: 380px; top: calc(50vh + 10px); width: calc(50vw - 200px); height: calc(50vh - 30px);">
+        <div class="os-window-header">
+            <span>📘 Facebook Live Producer</span>
+        </div>
+        <div class="os-window-content" style="align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, rgba(24, 119, 242, 0.1), rgba(24, 119, 242, 0.02));">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="#1877f2" style="margin-bottom: 1rem;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <h3 style="color: #1877f2; margin-bottom: 0.5rem;">Facebook Güvenliği</h3>
+            <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1.5rem; max-width: 80%;">
+                Facebook, güvenlik duvarları nedeniyle dashboard içine gömülmeyi tamamen engellemektedir (beyaz ekran). <br><br>Yayın şifrenizi kopyalamak için aşağıdaki butonla Facebook'u ayrı bir pencerede açmanız gerekmektedir.
+            </p>
+            <button onclick="window.open('https://www.facebook.com/live/producer', '_blank', 'width=1200,height=800,left=100,top=100');" style="background: #1877f2; color: white; border: none; padding: 0.8rem 2rem; border-radius: 0.5rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);">
+                FACEBOOK'U YENİ PENCEREDE AÇ
+            </button>
+        </div>
+    </div>
+
+    <!-- Pencere 4: Önizleme & Loglar -->
+    <div class="os-window" id="win-stats" style="left: calc(50vw + 200px); top: 20px; width: 340px; height: calc(100vh - 40px);">
+        <div class="os-window-header">
+            <span>📈 Canlı Takip & Loglar</span>
+        </div>
+        <div class="os-window-content">
+            <div style="background: #000; height: 180px; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px solid var(--card-border);">
+                <img id="stream-preview" src="" style="max-width: 100%; max-height: 100%; display: none; object-fit: contain;">
+                <span id="preview-text" style="color: var(--text-dim); font-size: 0.8rem; position: absolute;">Önizleme Bekleniyor...</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div class="stat-card"><div class="stat-label">Yayın</div><div class="stat-value" id="stat-user">@---</div></div>
+                <div class="stat-card"><div class="stat-label">Uptime</div><div class="stat-value" id="stat-uptime">00:00:00</div></div>
+                <div class="stat-card" style="grid-column: span 2;"><div class="stat-label">Bitrate</div><div class="stat-value" id="stat-cur-bitrate">0 kbps</div></div>
+            </div>
+
+            <div class="logs-container" id="logs">
+                <div class="log-info">Sistem başlatıldı...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DRAG & DROP WINDOW LOGIC ---
+        let highestZ = 100;
+        document.querySelectorAll('.os-window').forEach(win => {
+            const header = win.querySelector('.os-window-header');
+            let isDragging = false, startX, startY, initLeft, initTop;
+
+            // Load saved position
+            const saved = localStorage.getItem(win.id);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    win.style.left = data.left; win.style.top = data.top;
+                    win.style.width = data.width; win.style.height = data.height;
+                } catch(e){}
+            }
+
+            // Bring to front on click anywhere in window
+            win.addEventListener('mousedown', () => { win.style.zIndex = ++highestZ; });
+
+            // Drag logic
+            header.addEventListener('mousedown', e => {
+                isDragging = true;
+                startX = e.clientX; startY = e.clientY;
+                initLeft = win.offsetLeft; initTop = win.offsetTop;
+                document.body.style.userSelect = 'none';
+            });
+
+            document.addEventListener('mousemove', e => {
+                if (!isDragging) return;
+                win.style.left = `${initLeft + (e.clientX - startX)}px`;
+                win.style.top = `${initTop + (e.clientY - startY)}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    document.body.style.userSelect = '';
+                    localStorage.setItem(win.id, JSON.stringify({
+                        left: win.style.left, top: win.style.top,
+                        width: win.style.width, height: win.style.height
+                    }));
+                }
+            });
+
+            // Save resize
+            win.addEventListener('mouseup', () => {
+                localStorage.setItem(win.id, JSON.stringify({
+                    left: win.style.left, top: win.style.top,
+                    width: win.style.width, height: win.style.height
+                }));
+            });
+        });
+
+        function resetWindows() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        // --- BACKEND LOGIC ---
+        const logsContainer = document.getElementById('logs');
+        const statusBox = document.getElementById('status-box');
+        const statusText = document.getElementById('status-text');
+        const statusSubtext = document.getElementById('status-subtext');
+        const tiktokUserInput = document.getElementById('tiktok_user');
+        const fbKeyInput = document.getElementById('fb_key');
+        const rtmpUrlInput = document.getElementById('rtmp_url');
+        const bitrateRange = document.getElementById('bitrate_range');
+        const resSelect = document.getElementById('resolution');
+        
+        let isInitialLoad = true;
+
+        function updateStatus() {
+            fetch('/api/status').then(r => r.json()).then(data => {
+                statusText.innerText = data.status === 'STREAMING' ? 'CANLI YAYINDA' : (data.status === 'CHECKING' ? 'KONTROL EDİLİYOR' : 'BEKLEMEDE');
+                statusSubtext.innerText = data.status_text;
+                statusBox.className = `status-container status-${data.status.toLowerCase()}`;
+                
+                const fbDot = document.getElementById('fb-dot');
+                const fbText = document.getElementById('fb-text');
+                if (data.status === 'STREAMING') {
+                    fbDot.style.background = 'var(--accent)'; fbDot.style.boxShadow = '0 0 8px var(--accent)'; fbText.style.color = 'var(--accent)'; fbText.innerText = 'Facebook Yayında';
+                } else {
+                    fbDot.style.background = 'var(--error)'; fbDot.style.boxShadow = 'none'; fbText.style.color = 'var(--error)'; fbText.innerText = 'Facebook Kapalı';
+                }
+
+                document.getElementById('btn-start').style.display = data.is_active ? 'none' : 'block';
+                document.getElementById('btn-stop').style.display = data.is_active ? 'block' : 'none';
+                
+                document.getElementById('stat-user').innerText = `@${data.username || '---'}`;
+                document.getElementById('stat-uptime').innerText = data.uptime;
+                document.getElementById('stat-cur-bitrate').innerText = data.status === 'STREAMING' ? `${data.bitrate} kbps` : '0 kbps';
+                
+                if (isInitialLoad) {
+                    tiktokUserInput.value = data.username || '';
+                    fbKeyInput.value = data.stream_key || '';
+                    rtmpUrlInput.value = data.rtmp_url || '';
+                    bitrateRange.value = data.bitrate || 1500;
+                    document.getElementById('bitrate_val').innerText = data.bitrate || 1500;
+                    resSelect.value = data.resolution || '720x1280';
+                    isInitialLoad = false;
+                }
+
+                logsContainer.innerHTML = data.logs.slice().reverse().map(log => {
+                    let type = 'info';
+                    if (log.includes('FFMPEG')) type = 'ffmpeg';
+                    if (log.includes('Hata') || log.includes('Error')) type = 'error';
+                    return `<div class="log-entry log-${type}">[SYS] ${log}</div>`;
+                }).join('');
+            });
+        }
+
+        function updatePreview() {
+            const streamPreview = document.getElementById('stream-preview');
+            const previewText = document.getElementById('preview-text');
+            if (statusText.innerText === 'CANLI YAYINDA') {
+                streamPreview.src = `/preview.jpg?t=${new Date().getTime()}`;
+                streamPreview.style.display = 'block'; previewText.style.display = 'none';
+            } else {
+                streamPreview.style.display = 'none'; previewText.style.display = 'block';
+            }
+        }
+
+        function saveSettings() {
+            fetch('/api/settings', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: tiktokUserInput.value.replace('@', '').trim(), 
+                    stream_key: fbKeyInput.value.trim(), 
+                    rtmp_url: rtmpUrlInput.value.trim(), 
+                    bitrate: bitrateRange.value, 
+                    resolution: resSelect.value 
+                })
+            }).then(() => alert('Ayarlar kaydedildi.'));
+        }
+
+        function startStream() { saveSettings(); fetch('/api/start', { method: 'POST' }).then(() => updateStatus()); }
+        function stopStream() { fetch('/api/stop', { method: 'POST' }).then(() => updateStatus()); }
+
+        setInterval(updateStatus, 2000);
+        setInterval(updatePreview, 5000);
+        updateStatus(); updatePreview();
+    </script>
+</body>
+</html>

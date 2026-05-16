@@ -1,16 +1,40 @@
-# React + Vite
+# 🚀 HalLink Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mersin Hal Kompleksi için dijital ticaret ve eşleştirme platformu. Komisyoncular ve tüccarların ürün ilanı verip birbirleriyle iletişime geçmesini sağlar.
 
-Currently, two official plugins are available:
+## ✨ Özellikler
+- **Rol Tabanlı Kayıt:** Komisyoncu veya Tüccar olarak profil oluşturma.
+- **Pazaryeri:** Aktif ürün ilanlarının listelenmesi ve filtrelenmesi.
+- **WhatsApp Entegrasyonu:** Tek tıkla satıcıya ulaşma.
+- **Admin Dashboard:** İstatistiklerin takibi ve ilan yönetimi.
+- **Kalıcı Veritabanı:** Supabase ile güvenli ve hızlı veri depolama.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Teknik Altyapı
+- **Frontend:** React + Vite
+- **Styling:** Vanilla CSS (Glassmorphism UI)
+- **Animasyon:** Framer Motion
+- **Veritabanı:** Supabase
+- **Hosting:** Netlify
 
-## React Compiler
+## 🚀 Kurulum
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Depoyu klonlayın:
+   ```bash
+   git clone https://github.com/cengo33/HalLink-Platform.git
+   ```
+2. Bağımlılıkları yükleyin:
+   ```bash
+   npm install
+   ```
+3. `.env` dosyasını oluşturun:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+4. Geliştirme modunda çalıştırın:
+   ```bash
+   npm run dev
+   ```
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🔐 Güvenlik Notu
+Admin paneline erişim şifresi: `8888` (Admin arayüzünden değiştirilebilir).

@@ -1,0 +1,1 @@
+{"query": "{ deploymentLogs(deploymentId: \"7f1f2ea6-4574-4c06-89ca-46d0331ecd5b\", limit: 50) { message timestamp severity } }"}

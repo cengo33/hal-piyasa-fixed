@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Inviter AI | Antigravity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fab fa-facebook-f"></i>
+                <h1>FB <span>Inviter</span></h1>
+            </div>
+            <div class="status-badge" id="status-badge">
+                <span class="dot"></span>
+                <span id="status-text">Ready</span>
+            </div>
+        </header>
+
+        <main>
+            <section class="control-panel glass">
+                <h2>Automation Control</h2>
+                <p>Enter the URL of the Facebook post to invite people who reacted.</p>
+                <div class="input-group">
+                    <input type="text" id="post-url" placeholder="https://www.facebook.com/page/posts/12345..." />
+                    <button id="start-btn" class="btn-primary">
+                        <i class="fas fa-play"></i> Start Inviting
+                    </button>
+                    <button id="stop-btn" class="btn-danger hidden">
+                        <i class="fas fa-stop"></i> Stop
+                    </button>
+                </div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <span class="stat-label">Invitations Sent</span>
+                        <span class="stat-value" id="invite-count">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Session Status</span>
+                        <span class="stat-value" id="session-status">Active</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="logs-container glass">
+                <div class="logs-header">
+                    <h3>Activity Log</h3>
+                    <button id="clear-logs" class="btn-icon"><i class="fas fa-trash"></i></button>
+                </div>
+                <div id="logs" class="logs-content">
+                    <!-- Logs will be injected here -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Antigravity AI Automation Systems</p>
+        </footer>
+    </div>
+
+    <script>
+        const socket = io();
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const postUrlInput = document.getElementById('post-url');
+        const logsContainer = document.getElementById('logs');
+        const statusBadge = document.getElementById('status-badge');
+        const statusText = document.getElementById('status-text');
+        const inviteCountSpan = document.getElementById('invite-count');
+
+        let inviteCount = 0;
+
+        socket.on('new_log', (log) => {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${log.type}`;
+            logEntry.innerHTML = `
+                <span class="log-time">${log.time}</span>
+                <span class="log-message">${log.message}</span>
+            `;
+            logsContainer.prepend(logEntry);
+
+            if (log.message.includes('Sent invitation')) {
+                inviteCount++;
+                inviteCountSpan.innerText = inviteCount;
+            }
+
+            if (log.message.includes('Starting')) {
+                setRunning(true);
+            } else if (log.message.includes('completed') || log.message.includes('Error')) {
+                setRunning(false);
+            }
+        });
+
+        function setRunning(running) {
+            if (running) {
+                startBtn.classList.add('hidden');
+                stopBtn.classList.remove('hidden');
+                statusBadge.classList.add('running');
+                statusText.innerText = 'Running';
+            } else {
+                startBtn.classList.remove('hidden');
+                stopBtn.classList.add('hidden');
+                statusBadge.classList.remove('running');
+                statusText.innerText = 'Ready';
+            }
+        }
+
+        startBtn.addEventListener('click', () => {
+            const url = postUrlInput.value;
+            if (!url) return alert('Please enter a Facebook post URL');
+
+            fetch('/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+        });
+
+        stopBtn.addEventListener('click', () => {
+            fetch('/stop', { method: 'POST' });
+        });
+
+        document.getElementById('clear-logs').addEventListener('click', () => {
+            logsContainer.innerHTML = '';
+        });
+    </script>
+</body>
+</html>

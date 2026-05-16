@@ -2,3 +2,5 @@ yt-dlp
 imageio-ffmpeg
 python-dotenv
 playwright
+flask
+flask-cors

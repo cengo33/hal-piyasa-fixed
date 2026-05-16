@@ -1,0 +1,25 @@
+{
+  "_aciklama": "Bu, eposta_fatura_oku.py ciktisinin ornek sablonudur. Gercek calistirmada Gmail thread'lerinden doldurulur. Orijinal dosya gercek eposta yazismasi icerdigi icin paylasim paketinden temizlendi.",
+  "query": "Ornek Marka",
+  "threads": [
+    {
+      "thread_id": "<THREAD_ID>",
+      "message_count": 2,
+      "subject": "Ornek isbirligi yazismasi",
+      "participants": [
+        "\"Siz\" <ornek@gmail.com>",
+        "Ornek Muhatap <contact@ornek-sirket.com>"
+      ],
+      "messages": [
+        {
+          "from": "Ornek Muhatap <contact@ornek-sirket.com>",
+          "to": "ornek@gmail.com",
+          "subject": "Ornek isbirligi yazismasi",
+          "date": "Mon, 01 Jan 2026 10:00:00 +0300",
+          "body": "Merhaba, isbirligi icin anlastigimiz tutar 500 USD. Sirket bilgileri: ORNEK SIRKET LTD, 123 Ornek Cadde, Sehir."
+        }
+      ],
+      "full_conversation": "--- [Mon, 01 Jan 2026 10:00:00 +0300] From: Ornek Muhatap <contact@ornek-sirket.com> ---\nMerhaba, isbirligi icin anlastigimiz tutar 500 USD."
+    }
+  ]
+}

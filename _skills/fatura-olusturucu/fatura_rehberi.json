@@ -1,0 +1,12 @@
+{
+  "_aciklama": "Bu dosya daha once fatura kesilmis markalarin bilgilerini hatirlamak icin kullanilir. Asagidaki ornek satiri silip kendi musteri/marka kayitlarinizla doldurun. Orijinal dosya gercek musteri verisi icerdigi icin paylasim paketinden temizlendi.",
+  "Ornek_Marka": {
+    "brand": "Ornek Marka",
+    "company": "ORNEK SIRKET LTD",
+    "email": "contact@ornek-sirket.com",
+    "address": "123 Ornek Cadde, Sehir, Posta Kodu, Ulke",
+    "currency": "USD",
+    "last_amount": "500",
+    "last_invoice_date": "2026-01-01"
+  }
+}
