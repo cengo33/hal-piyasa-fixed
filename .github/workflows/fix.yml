@@ -1,0 +1,15 @@
+name: Fix Repo
+on: [push]
+jobs:
+  fix:
+      runs-on: ubuntu-latest
+          steps:
+                - uses: actions/checkout@v2
+                      - name: Remove submodule
+                              run: |
+                                        git config user.name "github-actions"
+                                                  git config user.email "github-actions@github.com"
+                                                            git rm --cached Agent-Reach || true
+                                                                      git commit -m "chore: remove broken submodule" || true
+                                                                                git push
+                                                                                
